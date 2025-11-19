@@ -1,21 +1,34 @@
 import { Shield, Truck, Award, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { getProducts, getCategories, getFeaturedBrands, getProductCount } from './actions/products';
+import { getProducts, getCategories, getProductCount } from './actions/products';
+import { getHeroBanners } from '@/lib/actions/hero-banner-actions';
 import ProductsSection from '@/components/products/products-section';
-import QuickActions from '@/components/layout/quick-actions';
+import { HeroCarousel } from '@/components/hero/hero-carousel';
+import { getDefaultBanners } from '@/components/hero/default-banners';
+import { BrowseCategories } from '@/components/home/browse-categories';
 
 export default async function EnterpriseEcommerce() {
   // Fetch data server-side
-  const [products, categories, totalProducts] = await Promise.all([
+  const [products, categories, totalProducts, bannersResult] = await Promise.all([
     getProducts({ limit: 20 }),
     getCategories({ limit: 8 }),
     getProductCount(),
+    getHeroBanners('HOME'),
   ]);
+
+  const customBanners = bannersResult.success && bannersResult.banners ? bannersResult.banners : [];
+  const banners = customBanners.length > 0 ? customBanners : getDefaultBanners('HOME');
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Quick Actions Bar -  <QuickActions /> Only visible when logged in */}
-    
+      {/* Hero Carousel */}
+      <section className="px-6 pt-6">
+        <div className="max-w-[1600px] mx-auto">
+          <HeroCarousel banners={banners} />
+        </div>
+      </section>
+
+      {/* Browse Categories */}
+      <BrowseCategories categories={categories} />
 
       {/* Products Section */}
       <section className="py-8 px-6">

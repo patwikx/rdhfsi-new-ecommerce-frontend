@@ -97,11 +97,7 @@ export default async function ProfilePage() {
                 </Link>
                 <Link href="/profile/settings" className="block p-2 rounded hover:bg-muted transition-colors">
                   <p className="font-medium text-sm">Settings</p>
-                  <p className="text-xs text-muted-foreground">Account preferences</p>
-                </Link>
-                <Link href="/profile/security" className="block p-2 rounded hover:bg-muted transition-colors">
-                  <p className="font-medium text-sm">Security</p>
-                  <p className="text-xs text-muted-foreground">Password & security</p>
+                  <p className="text-xs text-muted-foreground">Account preferences & security</p>
                 </Link>
               </div>
             </div>

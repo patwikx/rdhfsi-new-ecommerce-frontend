@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useTransition, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { searchProducts } from '@/app/actions/products';
 import type { ProductWithDetails } from '@/app/actions/products';
 
 export default function SearchBar() {
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ProductWithDetails[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +42,14 @@ export default function SearchBar() {
     });
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+      setIsOpen(false);
+    }
+  };
+
   const formatPrice = (price: number) => {
     return price.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
@@ -52,7 +62,7 @@ export default function SearchBar() {
 
   return (
     <div className="flex-1 max-w-2xl relative" ref={searchRef}>
-      <div className="flex items-center gap-2 bg-muted px-4 py-2.5 rounded-sm border border-border focus-within:border-primary transition-colors">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 bg-muted px-4 py-2.5 rounded-sm border border-border focus-within:border-primary transition-colors">
         <Search className="w-4 h-4 text-muted-foreground" />
         <input 
           type="text" 
@@ -66,16 +76,17 @@ export default function SearchBar() {
         />
         {query && (
           <button
+            type="button"
             onClick={clearSearch}
             className="text-muted-foreground hover:text-foreground"
           >
             <X className="w-4 h-4" />
           </button>
         )}
-        <Button size="sm" className="h-7" disabled={isPending}>
+        <Button type="submit" size="sm" className="h-7" disabled={isPending || !query.trim()}>
           {isPending ? 'Searching...' : 'Search'}
         </Button>
-      </div>
+      </form>
 
       {/* Search Results Dropdown */}
       {isOpen && results.length > 0 && (

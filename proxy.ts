@@ -6,6 +6,14 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
+  // Debug logging
+  console.log('Proxy middleware:', {
+    path: nextUrl.pathname,
+    isLoggedIn,
+    hasAuth: !!req.auth,
+    authUser: req.auth?.user?.email
+  });
+
   const isAuthPage = nextUrl.pathname.startsWith('/auth/login') || 
                      nextUrl.pathname.startsWith('/auth/register') ||
                      nextUrl.pathname.startsWith('/login') ||
@@ -18,11 +26,13 @@ export default auth((req) => {
 
   // Redirect logged-in users away from auth pages
   if (isLoggedIn && isAuthPage) {
+    console.log('Redirecting logged-in user away from auth page');
     return NextResponse.redirect(new URL('/', nextUrl));
   }
 
   // Redirect non-logged-in users to login for protected routes
   if (!isLoggedIn && isProtectedRoute) {
+    console.log('Redirecting non-logged-in user to login');
     const redirectUrl = new URL('/auth/login', nextUrl);
     redirectUrl.searchParams.set('redirect', nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);

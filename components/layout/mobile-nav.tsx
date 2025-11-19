@@ -76,9 +76,67 @@ export default function MobileNav({ categories }: MobileNavProps) {
                   <span className="font-medium">Home</span>
                 </a>
 
+                <a
+                  href="/brands"
+                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span className="font-medium">Brands</span>
+                </a>
+
+                <a
+                  href="/categories"
+                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span className="font-medium">All Categories</span>
+                </a>
+
                 <div className="pt-4 pb-2">
                   <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Categories
+                    Collections
+                  </p>
+                </div>
+
+                <a
+                  href="/new"
+                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span>New Arrivals</span>
+                </a>
+                <a
+                  href="/sale"
+                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span>Sale</span>
+                </a>
+                <a
+                  href="/trending"
+                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span>Trending</span>
+                </a>
+                <a
+                  href="/featured"
+                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span>Featured</span>
+                </a>
+                <a
+                  href="/clearance"
+                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span>Clearance</span>
+                </a>
+
+                <div className="pt-4 pb-2">
+                  <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Top Categories
                   </p>
                 </div>
 
@@ -104,18 +162,18 @@ export default function MobileNav({ categories }: MobileNavProps) {
                 </div>
 
                 <a
-                  href="#"
+                  href="/orders"
                   className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   <span>Track Order</span>
                 </a>
                 <a
-                  href="#"
+                  href="/bulk-order"
                   className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
-                  <span>Quote Request</span>
+                  <span>Bulk Order</span>
                 </a>
                 <a
                   href="#"

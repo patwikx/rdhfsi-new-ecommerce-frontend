@@ -1118,3 +1118,50 @@ enum SettingDataType {
   JSON
   DATE
 }
+
+// ============================================
+// HERO BANNER / CAROUSEL SYSTEM
+// ============================================
+
+model HeroBanner {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  image       String          // Image URL or path
+  link        String?         // Optional link when banner is clicked
+  buttonText  String?         // Optional CTA button text
+  
+  // Placement control
+  placement   BannerPlacement
+  
+  // Display control
+  sortOrder   Int             @default(0) // Lower number = higher priority
+  isActive    Boolean         @default(true)
+  
+  // Date range (optional)
+  startDate   DateTime?
+  endDate     DateTime?
+  
+  // Styling options (optional)
+  textColor   String?         // Hex color for text
+  overlayColor String?        // Hex color for overlay
+  
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  createdBy   String?         // Admin user ID
+  
+  @@index([placement, isActive, sortOrder])
+  @@index([startDate, endDate])
+}
+
+enum BannerPlacement {
+  HOME
+  TRENDING
+  SALE
+  CLEARANCE
+  FEATURED
+  NEW_ARRIVALS
+  BRANDS
+  CATEGORY
+  SEARCH
+}

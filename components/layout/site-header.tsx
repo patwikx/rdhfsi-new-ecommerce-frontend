@@ -1,5 +1,11 @@
-import { ChevronDown, Building2, Clock, Phone, Wrench, Hammer, Zap, Paintbrush, Package } from 'lucide-react';
+import { Clock, Phone, Tag, Sparkles, TrendingUp, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import ClientWrapper from './client-wrapper';
 import SearchBar from '@/components/search/search-bar';
 import UserNavWrapper from './user-nav-wrapper';
@@ -10,20 +16,9 @@ import { auth } from '@/auth';
 import { getCategories } from '@/app/actions/products';
 import Image from 'next/image';
 
-// Helper function to get icon based on category name
-function getCategoryIcon(categoryName: string) {
-  const name = categoryName.toLowerCase();
-  if (name.includes('tool')) return Wrench;
-  if (name.includes('construction') || name.includes('hardware')) return Hammer;
-  if (name.includes('electrical') || name.includes('electric')) return Zap;
-  if (name.includes('paint') || name.includes('finishing')) return Paintbrush;
-  if (name.includes('plumb')) return Building2;
-  return Package;
-}
-
 export default async function SiteHeader() {
   const session = await auth() as { user?: { name?: string | null; email?: string | null } } | null;
-  const categories = await getCategories({ limit: 8 });
+  const categories = await getCategories({ limit: 100 }); // Get all categories for dropdown
   return (
     <>
       {/* Top Bar - Hidden on mobile */}
@@ -40,8 +35,8 @@ export default async function SiteHeader() {
             </div>
           </div>
           <div className="hidden lg:flex items-center gap-4">
-            <a href="#" className="hover:text-primary transition-colors font-medium text-xs">Track Order</a>
-            <a href="#" className="hover:text-primary transition-colors font-medium text-xs">Quote Request</a>
+            <a href="/orders" className="hover:text-primary transition-colors font-medium text-xs">Track Order</a>
+            <a href="/bulk-order" className="hover:text-primary transition-colors font-medium text-xs">Bulk Order</a>
             <a href="#" className="hover:text-primary transition-colors font-medium text-xs">Help Center</a>
           </div>
         </div>
@@ -95,25 +90,65 @@ export default async function SiteHeader() {
         {/* Secondary Navigation - Hidden on mobile */}
         <div className="border-t border-border bg-muted/30 hidden lg:block">
           <div className="max-w-[1600px] mx-auto px-6 py-2">
-            <div className="flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="gap-1 h-8" asChild>
-                <a href="/categories">
-                  All Categories <ChevronDown className="w-3.5 h-3.5" />
-                </a>
-              </Button>
-              {categories.slice(0, 6).map((cat) => {
-                const CategoryIcon = getCategoryIcon(cat.name);
-                return (
-                  <Button key={cat.id} variant="ghost" size="sm" className="h-8 gap-1.5" asChild>
-                    <a href={`/category/${cat.slug}`}>
-                      <CategoryIcon className="w-3.5 h-3.5" />
-                      {cat.name}
-                      <span className="text-xs text-muted-foreground">({cat.itemCount})</span>
-                    </a>
-                  </Button>
-                );
-              })}
-            </div>
+            <TooltipProvider>
+              <div className="flex items-center gap-1">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-1.5 h-8" asChild>
+                      <a href="/brands">
+                        Brands
+                        <Store className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+                      </a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Browse all brands</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-1.5 h-8" asChild>
+                      <a href="/new">
+                        New Arrivals
+                        <Sparkles className="w-3.5 h-3.5 text-yellow-500 animate-pulse" />
+                      </a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Check out our latest products</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-1.5 h-8" asChild>
+                      <a href="/sale">
+                        Sale
+                        <Tag className="w-3.5 h-3.5 text-red-500 animate-pulse" />
+                      </a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Hot deals & discounts</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-1.5 h-8" asChild>
+                      <a href="/trending">
+                        Trending
+                        <TrendingUp className="w-3.5 h-3.5 text-green-500 animate-pulse" />
+                      </a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Popular items right now</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
           </div>
         </div>
       </nav>
