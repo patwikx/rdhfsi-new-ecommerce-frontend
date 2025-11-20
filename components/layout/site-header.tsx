@@ -95,7 +95,7 @@ export default async function SiteHeader() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="sm" className="gap-1.5 h-8" asChild>
-                      <a href="/brands">
+                      <a href="/brand">
                         Brands
                         <Store className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
                       </a>

@@ -81,7 +81,7 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
               Home
             </Link>
             <span>/</span>
-            <Link href="/brands" className="hover:text-foreground">
+            <Link href="/brand" className="hover:text-foreground">
               Brands
             </Link>
             <span>/</span>

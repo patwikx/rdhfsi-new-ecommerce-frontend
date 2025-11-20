@@ -13,7 +13,7 @@ export default function BrandNotFound() {
             The brand you&apos;re looking for doesn&apos;t exist or has been removed.
           </p>
           <div className="flex items-center justify-center gap-4">
-            <Link href="/brands">
+            <Link href="/brand">
               <Button variant="outline">View All Brands</Button>
             </Link>
             <Link href="/">

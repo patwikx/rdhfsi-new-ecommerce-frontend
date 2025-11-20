@@ -49,7 +49,7 @@ export default function SiteFooter() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
-              <li><Link href="/brands" className="hover:text-foreground transition-colors">Brands</Link></li>
+              <li><Link href="/brand" className="hover:text-foreground transition-colors">Brands</Link></li>
               <li><Link href="/categories" className="hover:text-foreground transition-colors">All Categories</Link></li>
               <li><Link href="/bulk-order" className="hover:text-foreground transition-colors">Bulk Orders</Link></li>
             </ul>

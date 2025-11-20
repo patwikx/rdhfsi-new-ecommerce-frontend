@@ -77,7 +77,7 @@ export default function MobileNav({ categories }: MobileNavProps) {
                 </a>
 
                 <a
-                  href="/brands"
+                  href="/brand"
                   className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
