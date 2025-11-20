@@ -26,8 +26,9 @@ export function BrowseCategories({ categories }: BrowseCategoriesProps) {
         <h2 className="text-lg font-bold mb-4 text-white">Browse Categories</h2>
         <TooltipProvider>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {categories.map((category) => {
-              const growthPercent = Math.floor(Math.random() * 20) + 5;
+            {categories.map((category, index) => {
+              // Use deterministic value based on category ID instead of random
+              const growthPercent = ((category.itemCount % 15) + 5);
               return (
                 <Tooltip key={category.id}>
                   <TooltipTrigger asChild>

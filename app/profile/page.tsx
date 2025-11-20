@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ProfilePictureUploadWrapper } from '@/components/profile/profile-picture-upload-wrapper';
 import { EditableProfileInfo } from '@/components/profile/editable-profile-info';
+import { RecentlyViewed } from '@/components/products/recently-viewed';
 import { prisma } from '@/lib/prisma';
 import { generatePresignedUrl } from '@/lib/minio';
 import { toast } from 'sonner';
@@ -95,6 +96,10 @@ export default async function ProfilePage() {
                   <p className="font-medium text-sm">My Orders</p>
                   <p className="text-xs text-muted-foreground">View order history</p>
                 </Link>
+                <Link href="/wishlist" className="block p-2 rounded hover:bg-muted transition-colors">
+                  <p className="font-medium text-sm">Wishlist</p>
+                  <p className="text-xs text-muted-foreground">Saved items</p>
+                </Link>
                 <Link href="/profile/settings" className="block p-2 rounded hover:bg-muted transition-colors">
                   <p className="font-medium text-sm">Settings</p>
                   <p className="text-xs text-muted-foreground">Account preferences & security</p>
@@ -121,6 +126,11 @@ export default async function ProfilePage() {
               }}
             />
           </div>
+        </div>
+
+        {/* Recently Viewed Section */}
+        <div className="mt-8">
+          <RecentlyViewed />
         </div>
       </div>
     </div>

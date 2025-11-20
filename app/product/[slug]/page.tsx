@@ -1,9 +1,12 @@
 import { notFound } from 'next/navigation';
-import { Star, Truck, Check, AlertCircle, Package } from 'lucide-react';
+import { Star, Truck, Check, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getProductBySlug } from '@/app/actions/products';
 import ProductAddToCartSection from '@/components/products/product-add-to-cart-section';
+import { RelatedProducts } from '@/components/products/related-products';
+import { TrackProductView } from '@/components/products/track-product-view';
+import { ProductImageGallery } from '@/components/products/product-image-gallery';
 
 interface ProductPageProps {
   params: Promise<{
@@ -48,42 +51,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Product Images - 5 columns */}
           <div className="lg:col-span-5">
-            <div>
-              {/* Main Image */}
-              <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-4 border border-border">
-                {primaryImage?.url ? (
-                  <img
-                    src={primaryImage.url}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Package className="w-32 h-32 text-muted-foreground/40" />
-                  </div>
-                )}
-              </div>
-              
-              {/* Thumbnail Images - Show up to 4 */}
-              <div className="grid grid-cols-4 gap-2">
-                {product.images.slice(0, 4).map((image) => (
-                  <div key={image.id} className="aspect-square bg-muted rounded-sm overflow-hidden cursor-pointer hover:opacity-75 transition-opacity border border-border">
-                    <img
-                      src={image.url}
-                      alt={image.altText || product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-                
-                {/* Show placeholder boxes if less than 4 images */}
-                {product.images.length < 4 && [...Array(4 - product.images.length)].map((_, i) => (
-                  <div key={`placeholder-${i}`} className="aspect-square bg-muted rounded-sm border border-border flex items-center justify-center">
-                    <Package className="w-8 h-8 text-muted-foreground/30" />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ProductImageGallery images={product.images} productName={product.name} />
           </div>
 
           {/* Product Info - 7 columns */}
@@ -320,6 +288,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           </div>
         </div>
+
+        {/* Track Product View */}
+        <TrackProductView
+          product={{
+            id: product.id,
+            slug: product.slug,
+            name: product.name,
+            price: product.retailPrice,
+            image: primaryImage?.url,
+          }}
+        />
+
+        {/* Related Products */}
+        <RelatedProducts productId={product.id} />
       </div>
     </div>
   );

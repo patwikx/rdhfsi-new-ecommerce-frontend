@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/theme-provider";
+import { SessionProvider } from "next-auth/react";
 import SiteHeader from "@/components/layout/site-header";
 import SiteFooter from "@/components/layout/site-footer";
+import { SessionValidator } from "@/components/auth/session-validator";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -28,18 +30,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SiteHeader />
-          <main>{children}</main>
-          <SiteFooter />
-          <Toaster position="bottom-center" richColors />
-        </ThemeProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <SessionProvider refetchInterval={0} refetchOnWindowFocus={false}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SessionValidator />
+            <SiteHeader />
+            <main>{children}</main>
+            <SiteFooter />
+            <Toaster position="bottom-center" richColors />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

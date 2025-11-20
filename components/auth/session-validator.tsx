@@ -2,16 +2,32 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { Loader2 } from 'lucide-react';
 
 export function SessionValidator() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const isLoggingOutRef = useRef(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
+    // Don't run if loading or if there's an error
+    if (status === 'loading') {
+      return;
+    }
+
+    // Only run validation if user is authenticated
+    if (status !== 'authenticated' || !session?.user) {
+      // Clear any existing interval if user is not authenticated
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
+
     const checkSession = async () => {
       // Skip if already logging out
       if (isLoggingOutRef.current) {
@@ -72,7 +88,7 @@ export function SessionValidator() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [router]);
+  }, [router, session, status]);
 
   // Render overlay during transition
   if (isTransitioning) {
