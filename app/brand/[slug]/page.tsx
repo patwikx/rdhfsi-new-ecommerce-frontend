@@ -177,6 +177,7 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
                       leadTime: null,
                       inventories: [],
                       brand: { id: brand.id, name: brand.name, slug: brand.slug },
+                      poPrice: product.poPrice, // Use retailPrice as poPrice fallback
                     } as import('@/app/actions/products').ProductWithDetails} 
                   />
                 ))}

@@ -16,7 +16,7 @@ interface WishlistItem {
   name: string;
   slug: string;
   sku: string;
-  retailPrice: number;
+  poPrice: number;
   compareAtPrice: number | null;
   isOnSale: boolean;
   averageRating: number | null;
@@ -57,7 +57,7 @@ export function WishlistContent({ items: initialItems }: WishlistContentProps) {
       productId: item.productId,
       name: item.name,
       sku: item.sku,
-      price: item.retailPrice,
+      price: item.poPrice,
       image: item.image || undefined,
       maxStock: item.availableQty,
       quantity: 1,
@@ -83,7 +83,7 @@ export function WishlistContent({ items: initialItems }: WishlistContentProps) {
           productId: item.productId,
           name: item.name,
           sku: item.sku,
-          price: item.retailPrice,
+          price: item.poPrice,
           image: item.image || undefined,
           maxStock: item.availableQty,
           quantity: 1,
@@ -151,7 +151,7 @@ export function WishlistContent({ items: initialItems }: WishlistContentProps) {
               <p className="text-xs text-muted-foreground mb-2">SKU: {item.sku}</p>
 
               <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-lg font-bold">₱{formatPrice(item.retailPrice)}</span>
+                <span className="text-lg font-bold">₱{formatPrice(item.poPrice)}</span>
                 {item.compareAtPrice && (
                   <span className="text-sm text-muted-foreground line-through">
                     ₱{formatPrice(item.compareAtPrice)}
@@ -191,3 +191,4 @@ export function WishlistContent({ items: initialItems }: WishlistContentProps) {
     </div>
   );
 }
+

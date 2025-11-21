@@ -36,10 +36,10 @@ export default function CategoryProducts({
 
     switch (sort) {
       case 'price-asc':
-        sorted.sort((a, b) => a.retailPrice - b.retailPrice);
+        sorted.sort((a, b) => a.poPrice - b.poPrice);
         break;
       case 'price-desc':
-        sorted.sort((a, b) => b.retailPrice - a.retailPrice);
+        sorted.sort((a, b) => b.poPrice - a.poPrice);
         break;
       case 'newest':
         // Already sorted by createdAt desc from server
@@ -198,3 +198,4 @@ export default function CategoryProducts({
     </>
   );
 }
+

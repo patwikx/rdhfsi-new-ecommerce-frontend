@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Heart, Package } from 'lucide-react';
 import { useCartStore } from '@/lib/store/cart-store';
 import { useWishlistStore } from '@/lib/store/wishlist-store';
+import { useQuotationStore } from '@/lib/stores/quotation-store';
 import { toast } from 'sonner';
 import type { ProductWithDetails } from '@/app/actions/products';
 
@@ -13,6 +15,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const router = useRouter();
   const formatPrice = (price: number) => {
     return price.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
@@ -21,6 +24,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+  const addToQuotation = useQuotationStore((state) => state.addItem);
   const isWishlisted = isInWishlist(product.id);
 
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
@@ -39,7 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       productId: product.id,
       name: product.name,
       sku: product.sku,
-      price: product.retailPrice,
+      price: product.poPrice,
       image: primaryImage?.url,
       maxStock: totalStock,
       quantity,
@@ -48,11 +52,29 @@ export default function ProductCard({ product }: ProductCardProps) {
     toast.success('Added to cart', {
       description: `${quantity} x ${product.name}`,
     });
+    
+    setTimeout(() => setIsAdding(false), 500);
+  };
 
-    setTimeout(() => {
-      setIsAdding(false);
-      setQuantity(1); // Reset quantity after adding
-    }, 500);
+  const handleQuoteClick = () => {
+    addToQuotation({
+      productId: product.id,
+      name: product.name,
+      sku: product.sku,
+      price: product.poPrice,
+      slug: product.slug,
+      image: primaryImage?.url,
+      maxStock: totalStock,
+      quantity,
+    });
+    
+    toast.success('Added to quotation', {
+      description: `${product.name} has been added to your quotation list`,
+      action: {
+        label: 'View',
+        onClick: () => router.push('/for-quotation'),
+      },
+    });
   };
 
   const incrementQty = (e: React.MouseEvent) => {
@@ -85,7 +107,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         productId: product.id,
         name: product.name,
         sku: product.sku,
-        price: product.retailPrice,
+        price: product.poPrice,
         image: primaryImage?.url,
         slug: product.slug,
         inStock: totalStock > 0,
@@ -117,7 +139,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
         
         {/* Sale Badge */}
-        {product.compareAtPrice && Number(product.compareAtPrice) > product.retailPrice && (
+        {product.compareAtPrice && Number(product.compareAtPrice) > product.poPrice && (
           <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">
             SALE
           </div>
@@ -147,7 +169,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="mb-2">
             <span className="inline-block bg-muted/50 rounded-md px-2 py-1">
               <span className="text-lg font-bold whitespace-nowrap">
-                ₱{formatPrice(product.retailPrice)}
+                ₱{formatPrice(product.poPrice)}
                 {product.baseUom && <span className="text-xs text-muted-foreground ml-1 lowercase">/{product.baseUom}</span>}
               </span>
             </span>
@@ -205,9 +227,21 @@ export default function ProductCard({ product }: ProductCardProps) {
             <ShoppingCart className="w-3 h-3" />
             {isAdding ? 'Adding...' : totalStock === 0 ? 'Out of Stock' : 'Add'}
           </Button>
-          <Button size="sm" variant="outline" className="h-8 text-xs px-2">Quote</Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="h-8 text-xs px-2"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleQuoteClick();
+            }}
+          >
+            Quote
+          </Button>
         </div>
       </div>
     </a>
   );
 }
+

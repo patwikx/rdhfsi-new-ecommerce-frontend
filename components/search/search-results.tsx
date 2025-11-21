@@ -14,7 +14,7 @@ interface SearchResultsProps {
       name: string;
       slug: string;
       description: string | null;
-      retailPrice: number;
+      poPrice: number;
       compareAtPrice: number | null;
       isOnSale: boolean;
       isFeatured: boolean;
@@ -35,6 +35,9 @@ interface SearchResultsProps {
         url: string;
         altText: string | null;
         isPrimary: boolean;
+      }[];
+      inventories: {
+        availableQty: number;
       }[];
     }[];
     totalCount: number;
@@ -113,7 +116,7 @@ export function SearchResults({ results, query }: SearchResultsProps) {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.products.map((product) => (
           <ProductCard 
             key={product.id} 
@@ -123,7 +126,11 @@ export function SearchResults({ results, query }: SearchResultsProps) {
               bulkPrice: null,
               moq: 1,
               leadTime: null,
-              inventories: [],
+              inventories: product.inventories.map((inv, idx) => ({
+                id: `inv-${product.id}-${idx}`,
+                availableQty: inv.availableQty,
+                site: { name: 'Main' },
+              })),
             } as import('@/app/actions/products').ProductWithDetails} 
           />
         ))}
@@ -189,3 +196,4 @@ export function SearchResults({ results, query }: SearchResultsProps) {
     </div>
   );
 }
+

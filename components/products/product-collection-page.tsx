@@ -14,7 +14,7 @@ interface ProductCollectionPageProps {
     name: string;
     slug: string;
     description: string | null;
-    retailPrice: number;
+    poPrice: number;
     compareAtPrice: number | null;
     isOnSale: boolean;
     isFeatured: boolean;
@@ -187,3 +187,4 @@ export function ProductCollectionPage({
     </div>
   );
 }
+

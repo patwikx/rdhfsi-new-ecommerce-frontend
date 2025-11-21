@@ -10,7 +10,7 @@ interface ProductCollectionResult {
     name: string;
     slug: string;
     description: string | null;
-    retailPrice: number;
+    poPrice: number;
     compareAtPrice: number | null;
     isOnSale: boolean;
     isFeatured: boolean;
@@ -61,10 +61,10 @@ export async function getTrendingProducts(options?: {
 
     switch (options?.sortBy) {
       case 'price-asc':
-        orderBy = { retailPrice: 'asc' };
+        orderBy = { poPrice: 'asc' };
         break;
       case 'price-desc':
-        orderBy = { retailPrice: 'desc' };
+        orderBy = { poPrice: 'desc' };
         break;
       case 'popular':
         orderBy = { reviewCount: 'desc' };
@@ -87,7 +87,7 @@ export async function getTrendingProducts(options?: {
           name: true,
           slug: true,
           description: true,
-          retailPrice: true,
+          poPrice: true,
           compareAtPrice: true,
           isOnSale: true,
           isFeatured: true,
@@ -128,7 +128,7 @@ export async function getTrendingProducts(options?: {
 
     const productsWithNumbers = products.map((product) => ({
       ...product,
-      retailPrice: Number(product.retailPrice),
+      poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
     }));
@@ -171,10 +171,10 @@ export async function getSaleProducts(options?: {
 
     switch (options?.sortBy) {
       case 'price-asc':
-        orderBy = { retailPrice: 'asc' };
+        orderBy = { poPrice: 'asc' };
         break;
       case 'price-desc':
-        orderBy = { retailPrice: 'desc' };
+        orderBy = { poPrice: 'desc' };
         break;
       case 'newest':
       default:
@@ -194,7 +194,7 @@ export async function getSaleProducts(options?: {
           name: true,
           slug: true,
           description: true,
-          retailPrice: true,
+          poPrice: true,
           compareAtPrice: true,
           isOnSale: true,
           isFeatured: true,
@@ -235,7 +235,7 @@ export async function getSaleProducts(options?: {
 
     const productsWithNumbers = products.map((product) => ({
       ...product,
-      retailPrice: Number(product.retailPrice),
+      poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
     }));
@@ -278,10 +278,10 @@ export async function getClearanceProducts(options?: {
 
     switch (options?.sortBy) {
       case 'price-asc':
-        orderBy = { retailPrice: 'asc' };
+        orderBy = { poPrice: 'asc' };
         break;
       case 'price-desc':
-        orderBy = { retailPrice: 'desc' };
+        orderBy = { poPrice: 'desc' };
         break;
       case 'newest':
       default:
@@ -301,7 +301,7 @@ export async function getClearanceProducts(options?: {
           name: true,
           slug: true,
           description: true,
-          retailPrice: true,
+          poPrice: true,
           compareAtPrice: true,
           isOnSale: true,
           isFeatured: true,
@@ -342,7 +342,7 @@ export async function getClearanceProducts(options?: {
 
     const productsWithNumbers = products.map((product) => ({
       ...product,
-      retailPrice: Number(product.retailPrice),
+      poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
     }));
@@ -385,10 +385,10 @@ export async function getFeaturedProducts(options?: {
 
     switch (options?.sortBy) {
       case 'price-asc':
-        orderBy = { retailPrice: 'asc' };
+        orderBy = { poPrice: 'asc' };
         break;
       case 'price-desc':
-        orderBy = { retailPrice: 'desc' };
+        orderBy = { poPrice: 'desc' };
         break;
       case 'popular':
         orderBy = { reviewCount: 'desc' };
@@ -411,7 +411,7 @@ export async function getFeaturedProducts(options?: {
           name: true,
           slug: true,
           description: true,
-          retailPrice: true,
+          poPrice: true,
           compareAtPrice: true,
           isOnSale: true,
           isFeatured: true,
@@ -452,7 +452,7 @@ export async function getFeaturedProducts(options?: {
 
     const productsWithNumbers = products.map((product) => ({
       ...product,
-      retailPrice: Number(product.retailPrice),
+      poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
     }));
@@ -502,10 +502,10 @@ export async function getNewArrivals(options?: {
 
     switch (options?.sortBy) {
       case 'price-asc':
-        orderBy = { retailPrice: 'asc' };
+        orderBy = { poPrice: 'asc' };
         break;
       case 'price-desc':
-        orderBy = { retailPrice: 'desc' };
+        orderBy = { poPrice: 'desc' };
         break;
       case 'popular':
         orderBy = { reviewCount: 'desc' };
@@ -528,7 +528,7 @@ export async function getNewArrivals(options?: {
           name: true,
           slug: true,
           description: true,
-          retailPrice: true,
+          poPrice: true,
           compareAtPrice: true,
           isOnSale: true,
           isFeatured: true,
@@ -569,7 +569,7 @@ export async function getNewArrivals(options?: {
 
     const productsWithNumbers = products.map((product) => ({
       ...product,
-      retailPrice: Number(product.retailPrice),
+      poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
     }));
@@ -588,3 +588,4 @@ export async function getNewArrivals(options?: {
     return { success: false, error: 'Failed to fetch new arrivals' };
   }
 }
+

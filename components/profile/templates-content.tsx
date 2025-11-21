@@ -25,7 +25,7 @@ interface Template {
       name: string;
       sku: string;
       slug: string;
-      retailPrice: number;
+      poPrice: number;
       images: { url: string }[];
     };
   }[];
@@ -55,7 +55,7 @@ export function TemplatesContent({ templates: initialTemplates }: TemplatesConte
         productId: item.product.id,
         name: item.product.name,
         sku: item.product.sku,
-        price: item.product.retailPrice,
+        price: item.product.poPrice,
         image: item.product.images[0]?.url,
         maxStock: 999, // We don't have stock info here
         quantity: item.quantity,
@@ -91,7 +91,7 @@ export function TemplatesContent({ templates: initialTemplates }: TemplatesConte
 
   const getTotalPrice = (template: Template) => {
     return template.items.reduce(
-      (sum, item) => sum + item.product.retailPrice * item.quantity,
+      (sum, item) => sum + item.product.poPrice * item.quantity,
       0
     );
   };
@@ -183,7 +183,7 @@ export function TemplatesContent({ templates: initialTemplates }: TemplatesConte
                 <div className="text-right">
                   <p className="text-sm font-medium">Qty: {item.quantity}</p>
                   <p className="text-xs text-muted-foreground">
-                    ₱{formatPrice(item.product.retailPrice * item.quantity)}
+                    ₱{formatPrice(item.product.poPrice * item.quantity)}
                   </p>
                 </div>
               </div>
@@ -194,3 +194,4 @@ export function TemplatesContent({ templates: initialTemplates }: TemplatesConte
     </div>
   );
 }
+

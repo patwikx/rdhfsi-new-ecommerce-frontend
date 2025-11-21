@@ -12,6 +12,16 @@ import { FileUpload, UploadedFileDisplay } from '@/components/shared/file-upload
 import { toast } from 'sonner';
 import { Session } from 'next-auth';
 import { OrderConfirmationDialog } from '@/components/orders/order-confirmation-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 type CheckoutStep = 'contact' | 'delivery' | 'payment' | 'review';
 
@@ -32,11 +42,14 @@ export default function CheckoutPage() {
     code: 'VAT12', 
     rate: 12.00 
   });
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [orderDialog, setOrderDialog] = useState<{
     open: boolean;
     success: boolean;
     orderNumber?: string;
     orderId?: string;
+    trackingNumber?: string;
+    totalAmount?: number;
     error?: string;
   }>({
     open: false,
@@ -242,13 +255,19 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateStep('payment')) {
       return;
     }
 
+    // Show confirmation dialog
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmOrder = async () => {
+    setShowConfirmDialog(false);
     setIsProcessing(true);
 
     try {
@@ -313,6 +332,9 @@ export default function CheckoutPage() {
         return;
       }
 
+      // Save total amount before clearing cart
+      const orderTotal = total;
+      
       // Clear cart and show success dialog
       console.log('Order success, clearing cart and showing dialog');
       clearCart();
@@ -321,6 +343,8 @@ export default function CheckoutPage() {
         success: true,
         orderNumber: result.orderNumber,
         orderId: result.orderId,
+        trackingNumber: result.trackingNumber,
+        totalAmount: orderTotal,
       });
       
       console.log('Dialog state set:', {
@@ -328,6 +352,8 @@ export default function CheckoutPage() {
         success: true,
         orderNumber: result.orderNumber,
         orderId: result.orderId,
+        trackingNumber: result.trackingNumber,
+        totalAmount: orderTotal,
       });
       
       // TODO: Send order confirmation email
@@ -354,14 +380,60 @@ export default function CheckoutPage() {
 
   return (
     <>
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Your Order</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div>
+                <p className="mb-4">
+                  Are you sure you want to place this order? Please review your order details before confirming.
+                </p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span className="font-medium">₱{formatPrice(subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping:</span>
+                    <span className="font-medium">₱{formatPrice(shippingFee)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax ({taxRate.name}):</span>
+                    <span className="font-medium">₱{formatPrice(vatAmount)}</span>
+                  </div>
+                  {couponDiscount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Discount:</span>
+                      <span className="font-medium">-₱{formatPrice(couponDiscount)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between border-t pt-2 text-base font-bold">
+                    <span>Total:</span>
+                    <span>₱{formatPrice(total)}</span>
+                  </div>
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmOrder}>
+              Confirm Order
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <OrderConfirmationDialog
         open={orderDialog.open}
         onOpenChange={(open) => setOrderDialog({ ...orderDialog, open })}
         success={orderDialog.success}
         orderNumber={orderDialog.orderNumber}
         orderId={orderDialog.orderId}
+        trackingNumber={orderDialog.trackingNumber}
         customerEmail={formData.email}
-        totalAmount={total}
+        totalAmount={orderDialog.totalAmount}
         error={orderDialog.error}
       />
       

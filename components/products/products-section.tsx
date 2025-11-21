@@ -55,10 +55,10 @@ export default function ProductsSection({
     // Apply sorting
     switch (sort) {
       case 'price-asc':
-        filtered.sort((a, b) => a.retailPrice - b.retailPrice);
+        filtered.sort((a, b) => a.poPrice - b.poPrice);
         break;
       case 'price-desc':
-        filtered.sort((a, b) => b.retailPrice - a.retailPrice);
+        filtered.sort((a, b) => b.poPrice - a.poPrice);
         break;
       case 'newest':
         // Already sorted by createdAt desc from server
@@ -284,3 +284,4 @@ export default function ProductsSection({
     </>
   );
 }
+

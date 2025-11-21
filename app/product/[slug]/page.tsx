@@ -135,10 +135,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   <p className="text-xs text-muted-foreground mb-1">Price per {product.baseUom || 'unit'}</p>
                   <div className="flex items-baseline gap-2">
                     <p className="text-3xl font-bold">
-                      ₱{formatPrice(product.retailPrice)}
+                      ₱{formatPrice(product.poPrice)}
                       {product.baseUom && <span className="text-base text-muted-foreground ml-1 lowercase">/{product.baseUom}</span>}
                     </p>
-                    {product.compareAtPrice && Number(product.compareAtPrice) > product.retailPrice && (
+                    {product.compareAtPrice && Number(product.compareAtPrice) > product.poPrice && (
                       <p className="text-lg text-muted-foreground line-through">
                         ₱{formatPrice(Number(product.compareAtPrice))}
                       </p>
@@ -170,7 +170,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     productId={product.id}
                     name={product.name}
                     sku={product.sku}
-                    price={product.retailPrice}
+                    price={product.poPrice}
                     image={primaryImage?.url}
                     maxStock={totalStock}
                   />
@@ -295,7 +295,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             id: product.id,
             slug: product.slug,
             name: product.name,
-            price: product.retailPrice,
+            price: product.poPrice,
             image: primaryImage?.url,
           }}
         />
@@ -319,6 +319,6 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
   return {
     title: `${product.name} - ProSupply Enterprise`,
-    description: `${product.name} - SKU: ${product.sku}. Starting at ₱${product.retailPrice.toLocaleString('en-PH')}. ${product.category.name} category.`,
+    description: `${product.name} - SKU: ${product.sku}. Starting at ₱${product.poPrice.toLocaleString('en-PH')}. ${product.category.name} category.`,
   };
 }

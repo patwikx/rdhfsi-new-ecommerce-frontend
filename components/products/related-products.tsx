@@ -66,7 +66,7 @@ export async function RelatedProducts({ productId }: RelatedProductsProps) {
               </div>
               
               <p className="text-lg font-bold">
-                ₱{Number(product.retailPrice).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ₱{Number(product.poPrice).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </Link>
           );
@@ -75,3 +75,4 @@ export async function RelatedProducts({ productId }: RelatedProductsProps) {
     </section>
   );
 }
+

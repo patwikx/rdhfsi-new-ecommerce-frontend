@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+
 import { ChevronLeft, MessageSquare, Package } from 'lucide-react';
 
 interface QuoteDetailsProps {
@@ -36,7 +36,7 @@ interface QuoteDetailsProps {
         name: string;
         slug: string;
         sku: string;
-        retailPrice: number;
+        poPrice: number;
       } | null;
     }[];
   };
@@ -114,13 +114,13 @@ export function QuoteDetails({ quote }: QuoteDetailsProps) {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Items */}
-          <Card className="p-6">
+          <div className="border-2 border-border p-6">
             <h2 className="text-xl font-bold mb-4">Requested Items</h2>
             <div className="space-y-3">
               {quote.items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-start justify-between p-4 bg-muted/30 rounded-lg"
+                  className="flex items-start justify-between border-b pb-3 last:border-0 last:pb-0"
                 >
                   <div className="flex-1">
                     {item.product ? (
@@ -152,11 +152,11 @@ export function QuoteDetails({ quote }: QuoteDetailsProps) {
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
 
           {/* Admin Response */}
           {quote.adminNotes && (
-            <Card className="p-6">
+            <div className="border-2 border-border p-6">
               <h2 className="text-xl font-bold mb-4">Response from RD Hardware</h2>
               <p className="text-sm whitespace-pre-wrap">{quote.adminNotes}</p>
               {quote.respondedAt && (
@@ -164,22 +164,22 @@ export function QuoteDetails({ quote }: QuoteDetailsProps) {
                   Responded on {new Date(quote.respondedAt).toLocaleDateString()}
                 </p>
               )}
-            </Card>
+            </div>
           )}
 
           {/* Your Message */}
           {quote.message && (
-            <Card className="p-6">
+            <div className="border-2 border-border p-6">
               <h2 className="text-xl font-bold mb-4">Your Message</h2>
               <p className="text-sm whitespace-pre-wrap">{quote.message}</p>
-            </Card>
+            </div>
           )}
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Contact Info */}
-          <Card className="p-6">
+          <div className="border-2 border-border p-6">
             <h2 className="text-lg font-bold mb-4">Contact Information</h2>
             <div className="space-y-2 text-sm">
               <div>
@@ -201,10 +201,10 @@ export function QuoteDetails({ quote }: QuoteDetailsProps) {
                 <p className="font-medium">{quote.customerPhone}</p>
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Status Info */}
-          <Card className="p-6">
+          <div className="border-2 border-border p-6">
             <h2 className="text-lg font-bold mb-4">Status</h2>
             <div className="space-y-3 text-sm">
               {quote.status === 'PENDING' && (
@@ -232,9 +232,10 @@ export function QuoteDetails({ quote }: QuoteDetailsProps) {
                 </p>
               )}
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

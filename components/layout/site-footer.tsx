@@ -30,11 +30,15 @@ export default function SiteFooter() {
             <div className="space-y-2 text-sm">
               <p className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <span>+639 123 945 6789</span>
+                <span>0939 912 4032</span>
               </p>
               <p className="flex items-center gap-2 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span className="text-xs">info@rdhardware.com</span>
+                <span className="text-xs">rdh_santiago@rdretailgroup.com.ph</span>
+              </p>
+              <p className="flex items-center gap-2 text-muted-foreground">
+                <MapPin className="w-4 h-4" />
+                <span className="text-xs">Santiago Boulevard, General Santos City</span>
               </p>
               <p className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="w-4 h-4" />
@@ -51,7 +55,7 @@ export default function SiteFooter() {
               <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
               <li><Link href="/brand" className="hover:text-foreground transition-colors">Brands</Link></li>
               <li><Link href="/categories" className="hover:text-foreground transition-colors">All Categories</Link></li>
-              <li><Link href="/bulk-order" className="hover:text-foreground transition-colors">Bulk Orders</Link></li>
+              <li><Link href="/for-quotation" className="hover:text-foreground transition-colors">Request Quotation</Link></li>
             </ul>
           </div>
 
@@ -62,8 +66,8 @@ export default function SiteFooter() {
               <li><Link href="/faq" className="hover:text-foreground transition-colors">FAQ</Link></li>
               <li><Link href="/shipping" className="hover:text-foreground transition-colors">Shipping Policy</Link></li>
               <li><Link href="/returns" className="hover:text-foreground transition-colors">Return Policy</Link></li>
-              <li><Link href="/orders" className="hover:text-foreground transition-colors">Track Order</Link></li>
-              <li><Link href="/contact" className="hover:text-foreground transition-colors">Help Center</Link></li>
+              <li><Link href="/track-order" className="hover:text-foreground transition-colors">Track Order</Link></li>
+              <li><Link href="/profile/quotes" className="hover:text-foreground transition-colors">My Quotations</Link></li>
             </ul>
           </div>
 

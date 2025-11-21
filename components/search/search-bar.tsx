@@ -122,7 +122,7 @@ export default function SearchBar() {
                   </p>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="text-sm font-bold">₱{formatPrice(product.retailPrice)}</p>
+                  <p className="text-sm font-bold">₱{formatPrice(product.poPrice)}</p>
                   {product.inventories.length > 0 && (
                     <p className="text-xs text-green-600 dark:text-green-400">
                       {product.inventories.reduce((sum, inv) => sum + inv.availableQty, 0)} in stock
@@ -146,3 +146,4 @@ export default function SearchBar() {
     </div>
   );
 }
+

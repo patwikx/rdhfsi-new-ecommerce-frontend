@@ -28,7 +28,7 @@ export interface SearchResult {
     name: string;
     slug: string;
     description: string | null;
-    retailPrice: number;
+    poPrice: number;
     compareAtPrice: number | null;
     isOnSale: boolean;
     isFeatured: boolean;
@@ -49,6 +49,9 @@ export interface SearchResult {
       url: string;
       altText: string | null;
       isPrimary: boolean;
+    }[];
+    inventories: {
+      availableQty: number;
     }[];
   }[];
   totalCount: number;

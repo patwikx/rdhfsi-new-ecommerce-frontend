@@ -106,7 +106,7 @@ export async function getQuoteById(id: string): Promise<{
         name: string;
         slug: string;
         sku: string;
-        retailPrice: number;
+        poPrice: number;
       } | null;
     }[];
   };
@@ -129,7 +129,7 @@ export async function getQuoteById(id: string): Promise<{
                 name: true,
                 slug: true,
                 sku: true,
-                retailPrice: true,
+                poPrice: true,
               },
             },
           },
@@ -154,7 +154,7 @@ export async function getQuoteById(id: string): Promise<{
         product: item.product
           ? {
               ...item.product,
-              retailPrice: Number(item.product.retailPrice),
+              poPrice: Number(item.product.poPrice),
             }
           : null,
       })),
@@ -223,3 +223,4 @@ export async function createQuote(data: {
     return { success: false, error: 'Failed to create quote' };
   }
 }
+

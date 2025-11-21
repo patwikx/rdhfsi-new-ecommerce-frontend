@@ -120,3 +120,166 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Print Styles */
+@media print {
+  /* Hide header, footer, and navigation */
+  body > header,
+  body > footer,
+  nav,
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  /* Ensure white background for printing */
+  body {
+    background: white !important;
+  }
+  
+  /* Preserve colors when printing */
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Remove margins and padding from body */
+  @page {
+    margin: 0.5cm;
+  }
+}
+
+/* Quotation Document Print Styles */
+@media print {
+  /* Letter size page setup */
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+
+  /* Hide non-printable elements */
+  body * {
+    visibility: hidden;
+  }
+
+  .quotation-document,
+  .quotation-document * {
+    visibility: visible;
+  }
+
+  .quotation-document {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Force white background and black text everywhere */
+  .quotation-document * {
+    background: white !important;
+    color: black !important;
+    border-color: black !important;
+  }
+
+  /* Compress headings */
+  .quotation-document h1 {
+    font-size: 18pt !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .quotation-document h2 {
+    font-size: 12pt !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Compress text sizes */
+  .quotation-document p,
+  .quotation-document span,
+  .quotation-document li {
+    font-size: 10pt !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Table styling for print - compressed */
+  .quotation-document table {
+    border-collapse: collapse !important;
+    font-size: 10pt !important;
+  }
+
+  .quotation-document table th,
+  .quotation-document table td {
+    border-color: black !important;
+    padding: 0.25rem 0.5rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .quotation-document table th {
+    font-size: 10pt !important;
+  }
+
+  /* Remove all backgrounds except table header/footer */
+  .quotation-document thead,
+  .quotation-document tfoot {
+    background: white !important;
+  }
+
+  /* Remove all colored borders and backgrounds */
+  .quotation-document .border-yellow-400,
+  .quotation-document .border-yellow-600,
+  .quotation-document .border-l-4 {
+    border: none !important;
+  }
+
+  /* Remove shadows and rounded corners */
+  .quotation-document * {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* Compress spacing */
+  .quotation-document .mb-3 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .quotation-document .mb-4 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .quotation-document .mb-6 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .quotation-document .pb-3 {
+    padding-bottom: 0.5rem !important;
+  }
+
+  .quotation-document .pt-6 {
+    padding-top: 0.75rem !important;
+  }
+
+  .quotation-document .mt-3 {
+    margin-top: 0.5rem !important;
+  }
+
+  .quotation-document .space-y-1 > * + * {
+    margin-top: 0.15rem !important;
+  }
+
+  /* Prevent page breaks inside important elements */
+  .quotation-document h1,
+  .quotation-document h2,
+  .quotation-document table,
+  .quotation-document tr {
+    page-break-inside: avoid;
+  }
+
+  /* Ensure proper spacing */
+  .quotation-document {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}

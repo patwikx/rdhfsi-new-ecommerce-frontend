@@ -50,10 +50,24 @@ function getUserInitials(name: string): string {
 export default function UserNav({ user }: UserNavProps) {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+  const [pendingOrdersCount, setPendingOrdersCount] = React.useState(0);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
+
+  React.useEffect(() => {
+    if (user?.id) {
+      const fetchPendingOrders = async () => {
+        const { getPendingOrdersCount } = await import('@/app/actions/orders');
+        const result = await getPendingOrdersCount();
+        if (result.success) {
+          setPendingOrdersCount(result.count);
+        }
+      };
+      fetchPendingOrders();
+    }
+  }, [user?.id]);
 
   const handleSignOut = React.useCallback(async () => {
     try {
@@ -145,6 +159,11 @@ export default function UserNav({ user }: UserNavProps) {
             <Link href="/orders">
               <Package className="mr-2 h-4 w-4" />
               <span>Orders</span>
+              {pendingOrdersCount > 0 && (
+                <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-destructive-foreground">
+                  {pendingOrdersCount}
+                </span>
+              )}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>

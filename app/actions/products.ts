@@ -10,7 +10,7 @@ function mapProductToDetails(product: {
   name: string;
   slug: string;
   baseUom: string;
-  retailPrice: { toNumber: () => number } | number;
+  poPrice: { toNumber: () => number } | number;
   compareAtPrice: { toNumber: () => number } | number | null;
   bulkPrice: { toNumber: () => number } | number | null;
   moq: number;
@@ -48,7 +48,7 @@ function mapProductToDetails(product: {
     name: product.name,
     slug: product.slug,
     baseUom: product.baseUom,
-    retailPrice: typeof product.retailPrice === 'number' ? product.retailPrice : Number(product.retailPrice),
+    poPrice: typeof product.poPrice === 'number' ? product.poPrice : Number(product.poPrice),
     compareAtPrice: product.compareAtPrice ? (typeof product.compareAtPrice === 'number' ? product.compareAtPrice : Number(product.compareAtPrice)) : null,
     bulkPrice: product.bulkPrice ? (typeof product.bulkPrice === 'number' ? product.bulkPrice : Number(product.bulkPrice)) : null,
     moq: product.moq,
@@ -73,7 +73,7 @@ export interface ProductWithDetails {
   name: string;
   slug: string;
   baseUom?: string;
-  retailPrice: number;
+  poPrice: number;
   compareAtPrice?: number | null;
   bulkPrice: number | null;
   moq: number;
@@ -199,7 +199,7 @@ export async function getProducts(params?: {
     name: product.name,
     slug: product.slug,
     baseUom: product.baseUom,
-    retailPrice: Number(product.retailPrice),
+    poPrice: Number(product.poPrice),
     bulkPrice: product.bulkPrice ? Number(product.bulkPrice) : null,
     moq: product.moq,
     leadTime: product.leadTime,
@@ -353,7 +353,7 @@ export async function getProductsByCategory(
     name: product.name,
     slug: product.slug,
     baseUom: product.baseUom,
-    retailPrice: Number(product.retailPrice),
+    poPrice: Number(product.poPrice),
     bulkPrice: product.bulkPrice ? Number(product.bulkPrice) : null,
     moq: product.moq,
     leadTime: product.leadTime,
@@ -477,7 +477,7 @@ export async function getProductBySlug(slug: string): Promise<ProductWithDetails
     name: product.name,
     slug: product.slug,
     baseUom: product.baseUom,
-    retailPrice: Number(product.retailPrice),
+    poPrice: Number(product.poPrice),
     bulkPrice: product.bulkPrice ? Number(product.bulkPrice) : null,
     moq: product.moq,
     leadTime: product.leadTime,
@@ -591,7 +591,7 @@ export async function searchProducts(query: string): Promise<ProductWithDetails[
     name: product.name,
     slug: product.slug,
     baseUom: product.baseUom,
-    retailPrice: Number(product.retailPrice),
+    poPrice: Number(product.poPrice),
     bulkPrice: product.bulkPrice ? Number(product.bulkPrice) : null,
     moq: product.moq,
     leadTime: product.leadTime,
@@ -607,3 +607,4 @@ export async function searchProducts(query: string): Promise<ProductWithDetails[
     })),
   }));
 }
+

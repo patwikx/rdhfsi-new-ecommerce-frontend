@@ -68,7 +68,7 @@ export default async function WishlistPage() {
     name: item.product.name,
     slug: item.product.slug,
     sku: item.product.sku,
-    retailPrice: Number(item.product.retailPrice),
+    poPrice: Number(item.product.poPrice),
     compareAtPrice: item.product.compareAtPrice ? Number(item.product.compareAtPrice) : null,
     isOnSale: item.product.isOnSale,
     averageRating: item.product.averageRating ? Number(item.product.averageRating) : null,
@@ -101,3 +101,4 @@ export default async function WishlistPage() {
     </div>
   );
 }
+

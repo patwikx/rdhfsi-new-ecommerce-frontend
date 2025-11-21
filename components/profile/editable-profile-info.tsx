@@ -67,7 +67,16 @@ export function EditableProfileInfo({ initialData }: EditableProfileInfoProps) {
     <div className="border border-border rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold">Account Information</h3>
-        {!isEditing && (
+        {isEditing ? (
+          <div className="flex gap-2">
+            <Button onClick={handleSave} disabled={isSaving} size="sm">
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </Button>
+            <Button variant="outline" onClick={handleCancel} disabled={isSaving} size="sm">
+              Cancel
+            </Button>
+          </div>
+        ) : (
           <Button onClick={() => setIsEditing(true)} size="sm">
             Edit Profile
           </Button>
@@ -255,23 +264,7 @@ export function EditableProfileInfo({ initialData }: EditableProfileInfoProps) {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      {isEditing ? (
-        <div className="flex gap-3 mt-8 pt-6 border-t border-border">
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? 'Saving...' : 'Save Changes'}
-          </Button>
-          <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
-            Cancel
-          </Button>
-        </div>
-      ) : (
-        <div className="flex gap-3 mt-8 pt-6 border-t border-border">
-          <Button onClick={() => setIsEditing(true)}>
-            Edit Profile
-          </Button>
-        </div>
-      )}
+
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ProfilePictureUploadWrapper } from '@/components/profile/profile-picture-upload-wrapper';
 import { EditableProfileInfo } from '@/components/profile/editable-profile-info';
@@ -95,6 +94,10 @@ export default async function ProfilePage() {
                 <Link href="/orders" className="block p-2 rounded hover:bg-muted transition-colors">
                   <p className="font-medium text-sm">My Orders</p>
                   <p className="text-xs text-muted-foreground">View order history</p>
+                </Link>
+                <Link href="/profile/quotes" className="block p-2 rounded hover:bg-muted transition-colors">
+                  <p className="font-medium text-sm">My Quotations</p>
+                  <p className="text-xs text-muted-foreground">View quotation requests</p>
                 </Link>
                 <Link href="/wishlist" className="block p-2 rounded hover:bg-muted transition-colors">
                   <p className="font-medium text-sm">Wishlist</p>

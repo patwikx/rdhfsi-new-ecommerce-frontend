@@ -12,6 +12,8 @@ import UserNavWrapper from './user-nav-wrapper';
 import MobileNav from './mobile-nav';
 import CartIcon from './cart-icon';
 import WishlistSheet from '@/components/wishlist/wishlist-sheet';
+import { HelpCenterButton } from './help-center-button';
+import { NotificationBell } from './notification-bell';
 import { auth } from '@/auth';
 import { getCategories } from '@/app/actions/products';
 import Image from 'next/image';
@@ -27,7 +29,7 @@ export default async function SiteHeader() {
           <div className="flex items-center gap-4 lg:gap-6">
             <div className="flex items-center gap-2">
               <Phone className="w-3.5 h-3.5" />
-              <a href="tel:+639123945678" className="font-medium text-xs sm:text-sm hover:text-primary transition-colors">+639 123 945 6789</a>
+              <a href="tel:+63939 912 4032" className="font-medium text-xs sm:text-sm hover:text-primary transition-colors">0939 912 4032</a>
             </div>
             <div className="hidden md:flex items-center gap-2 text-muted-foreground">
               <Clock className="w-3.5 h-3.5" />
@@ -35,9 +37,9 @@ export default async function SiteHeader() {
             </div>
           </div>
           <div className="hidden lg:flex items-center gap-4">
-            <a href="/orders" className="hover:text-primary transition-colors font-medium text-xs">Track Order</a>
-            <a href="/bulk-order" className="hover:text-primary transition-colors font-medium text-xs">Bulk Order</a>
-            <a href="#" className="hover:text-primary transition-colors font-medium text-xs">Help Center</a>
+            <a href="/track-order" className="hover:text-primary transition-colors font-medium text-xs">Track Order</a>
+            <a href="/for-quotation" className="hover:text-primary transition-colors font-medium text-xs">Quotation</a>
+            <HelpCenterButton />
           </div>
         </div>
       </div>
@@ -77,6 +79,7 @@ export default async function SiteHeader() {
                 <WishlistSheet />
                 <CartIcon />
               </ClientWrapper>
+              {session?.user && <NotificationBell />}
               <UserNavWrapper user={session?.user || null} />
             </div>
           </div>

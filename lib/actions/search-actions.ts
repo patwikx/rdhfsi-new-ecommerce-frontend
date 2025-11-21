@@ -41,12 +41,12 @@ export async function searchProducts(
 
     // Price range filter
     if (minPrice !== undefined || maxPrice !== undefined) {
-      where.retailPrice = {};
+      where.poPrice = {};
       if (minPrice !== undefined) {
-        where.retailPrice.gte = minPrice;
+        where.poPrice.gte = minPrice;
       }
       if (maxPrice !== undefined) {
-        where.retailPrice.lte = maxPrice;
+        where.poPrice.lte = maxPrice;
       }
     }
 
@@ -55,10 +55,10 @@ export async function searchProducts(
 
     switch (sortBy) {
       case 'price-asc':
-        orderBy = [{ retailPrice: 'asc' }];
+        orderBy = [{ poPrice: 'asc' }];
         break;
       case 'price-desc':
-        orderBy = [{ retailPrice: 'desc' }];
+        orderBy = [{ poPrice: 'desc' }];
         break;
       case 'newest':
         orderBy = [{ createdAt: 'desc' }];
@@ -93,7 +93,7 @@ export async function searchProducts(
           name: true,
           slug: true,
           description: true,
-          retailPrice: true,
+          poPrice: true,
           compareAtPrice: true,
           isOnSale: true,
           isFeatured: true,
@@ -125,6 +125,11 @@ export async function searchProducts(
             },
             take: 1,
           },
+          inventories: {
+            select: {
+              availableQty: true,
+            },
+          },
         },
       }),
       prisma.product.count({ where }),
@@ -135,9 +140,12 @@ export async function searchProducts(
     // Convert Decimal to number
     const productsWithNumbers = products.map((product) => ({
       ...product,
-      retailPrice: Number(product.retailPrice),
+      poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
+      inventories: product.inventories.map((inv) => ({
+        availableQty: Number(inv.availableQty),
+      })),
     }));
 
     // Log search activity (async, don't wait for it)
@@ -312,10 +320,10 @@ export async function getSearchFilters(query?: string): Promise<{
     const priceAgg = await prisma.product.aggregate({
       where,
       _min: {
-        retailPrice: true,
+        poPrice: true,
       },
       _max: {
-        retailPrice: true,
+        poPrice: true,
       },
     });
 
@@ -335,8 +343,8 @@ export async function getSearchFilters(query?: string): Promise<{
           count: brand._count.products,
         })),
         priceRange: {
-          min: Number(priceAgg._min.retailPrice) || 0,
-          max: Number(priceAgg._max.retailPrice) || 10000,
+          min: Number(priceAgg._min.poPrice) || 0,
+          max: Number(priceAgg._max.poPrice) || 10000,
         },
       },
     };
@@ -416,3 +424,4 @@ export async function getPopularSearches(limit: number = 10): Promise<{
     return { success: false, error: 'Failed to get popular searches' };
   }
 }
+

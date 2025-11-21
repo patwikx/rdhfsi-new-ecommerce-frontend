@@ -17,6 +17,7 @@ interface OrderConfirmationDialogProps {
   success: boolean;
   orderNumber?: string;
   orderId?: string;
+  trackingNumber?: string;
   customerEmail?: string;
   totalAmount?: number;
   error?: string;
@@ -28,6 +29,7 @@ export function OrderConfirmationDialog({
   success,
   orderNumber,
   orderId,
+  trackingNumber,
   customerEmail,
   totalAmount,
   error,
@@ -84,6 +86,14 @@ export function OrderConfirmationDialog({
                 <span className="text-muted-foreground">Status:</span>
                 <span className="font-medium">Pending Confirmation</span>
               </div>
+
+              {trackingNumber && (
+                <div className="flex items-center gap-3 text-sm">
+                  <Package className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Tracking Number:</span>
+                  <span className="font-mono font-medium">{trackingNumber}</span>
+                </div>
+              )}
 
               {totalAmount !== undefined && (
                 <div className="flex items-center gap-3 text-sm">

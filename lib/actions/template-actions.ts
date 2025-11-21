@@ -24,7 +24,7 @@ export async function getUserTemplates(): Promise<{
         name: string;
         sku: string;
         slug: string;
-        retailPrice: number;
+        poPrice: number;
         images: {
           url: string;
         }[];
@@ -50,7 +50,7 @@ export async function getUserTemplates(): Promise<{
                 name: true,
                 sku: true,
                 slug: true,
-                retailPrice: true,
+                poPrice: true,
                 images: {
                   select: { url: true },
                   take: 1,
@@ -71,7 +71,7 @@ export async function getUserTemplates(): Promise<{
         ...item,
         product: {
           ...item.product,
-          retailPrice: Number(item.product.retailPrice),
+          poPrice: Number(item.product.poPrice),
         },
       })),
     }));
@@ -237,3 +237,4 @@ export async function useTemplate(id: string): Promise<{
     return { success: false, error: 'Failed to use template' };
   }
 }
+

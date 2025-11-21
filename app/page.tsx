@@ -5,6 +5,7 @@ import ProductsSection from '@/components/products/products-section';
 import { HeroCarousel } from '@/components/hero/hero-carousel';
 import { getDefaultBanners } from '@/components/hero/default-banners';
 import { BrowseCategories } from '@/components/home/browse-categories';
+import { GuideDialogWrapper } from '@/components/shared/guide-dialog-wrapper';
 
 export default async function EnterpriseEcommerce() {
   // Fetch data server-side
@@ -20,6 +21,9 @@ export default async function EnterpriseEcommerce() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Guide Dialog */}
+      <GuideDialogWrapper />
+      
       {/* Hero Carousel */}
       <section className="px-6 pt-6">
         <div className="max-w-[1600px] mx-auto">

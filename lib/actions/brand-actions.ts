@@ -177,10 +177,10 @@ export async function getBrandProducts(
 
     switch (options?.sortBy) {
       case 'price-asc':
-        orderBy = { retailPrice: 'asc' };
+        orderBy = { poPrice: 'asc' };
         break;
       case 'price-desc':
-        orderBy = { retailPrice: 'desc' };
+        orderBy = { poPrice: 'desc' };
         break;
       case 'popular':
         orderBy = { reviewCount: 'desc' };
@@ -207,7 +207,7 @@ export async function getBrandProducts(
           name: true,
           slug: true,
           description: true,
-          retailPrice: true,
+          poPrice: true,
           compareAtPrice: true,
           isOnSale: true,
           isFeatured: true,
@@ -242,7 +242,7 @@ export async function getBrandProducts(
     // Convert Decimal to number
     const productsWithNumbers = products.map((product) => ({
       ...product,
-      retailPrice: Number(product.retailPrice),
+      poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
     }));
@@ -375,3 +375,4 @@ export async function getBrandCategories(brandId: string): Promise<{
     return { success: false, error: 'Failed to fetch categories' };
   }
 }
+

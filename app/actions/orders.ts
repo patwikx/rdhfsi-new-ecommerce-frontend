@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { redeemCoupon } from './coupon';
 import { getDefaultTaxRate } from './tax';
+import { createNotification } from './notifications';
 
 interface OrderItem {
   productId: string;
@@ -60,8 +61,9 @@ export async function createOrder(data: CreateOrderData) {
       return { success: false, error: 'User not authenticated' };
     }
 
-    // Generate order number
+    // Generate order number and tracking number
     const orderNumber = await generateOrderNumber();
+    const trackingNumber = await generateTrackingNumber();
 
     // Get tax rate details
     const taxRate = await getDefaultTaxRate();
@@ -99,6 +101,7 @@ export async function createOrder(data: CreateOrderData) {
         
         // Shipping
         shippingMethod: data.deliveryType === 'delivery' ? 'DELIVERY' : 'PICKUP',
+        trackingNumber,
         notes: data.notes,
         
         // Order items
@@ -174,10 +177,39 @@ export async function createOrder(data: CreateOrderData) {
       },
     });
 
+    // Notify all admin/manager/staff users about the new order
+    const adminUsers = await prisma.user.findMany({
+      where: {
+        role: {
+          in: ['ADMIN', 'MANAGER', 'STAFF'],
+        },
+        isActive: true,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    // Create notifications for all admin users
+    await Promise.all(
+      adminUsers.map((admin) =>
+        createNotification(
+          admin.id,
+          'ORDER_CONFIRMED',
+          'New Order Received',
+          `Order ${orderNumber} has been placed by ${data.fullName}. Total: ₱${data.totalAmount.toLocaleString()}`,
+          `/orders/${order.id}`,
+          'ORDER',
+          order.id
+        )
+      )
+    );
+
     return {
       success: true,
       orderId: order.id,
       orderNumber: order.orderNumber,
+      trackingNumber: order.trackingNumber || undefined,
     };
   } catch (error) {
     console.error('Error creating order:', error);
@@ -210,6 +242,34 @@ async function generateOrderNumber(): Promise<string> {
   const sequence = String(todayOrderCount + 1).padStart(4, '0');
   
   return `ORD-${year}${month}${day}-${sequence}`;
+}
+
+async function generateTrackingNumber(): Promise<string> {
+  const date = new Date();
+  const year = date.getFullYear().toString().slice(-2); // Last 2 digits of year
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  // Generate random alphanumeric string for uniqueness
+  const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+  
+  // Get count of orders today for sequence
+  const startOfDay = new Date(date.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+  
+  const todayOrderCount = await prisma.order.count({
+    where: {
+      createdAt: {
+        gte: startOfDay,
+        lte: endOfDay,
+      },
+    },
+  });
+  
+  const sequence = String(todayOrderCount + 1).padStart(3, '0');
+  
+  // Format: TRK-YYMMDD-SEQ-RANDOM (e.g., TRK-251121-001-A3F9K2)
+  return `TRK-${year}${month}${day}-${sequence}-${randomPart}`;
 }
 
 export async function getUserOrders() {
@@ -257,6 +317,89 @@ export async function getUserOrders() {
   } catch (error) {
     console.error('Error fetching orders:', error);
     return { success: false, error: 'Failed to fetch orders' };
+  }
+}
+
+export async function trackOrder(trackingNumber: string) {
+  try {
+    // Public endpoint - no authentication required
+    const order = await prisma.order.findFirst({
+      where: {
+        trackingNumber: trackingNumber.trim(),
+      },
+      select: {
+        id: true,
+        orderNumber: true,
+        trackingNumber: true,
+        status: true,
+        paymentStatus: true,
+        fulfillmentStatus: true,
+        customerName: true,
+        customerEmail: true,
+        totalAmount: true,
+        createdAt: true,
+        shippedAt: true,
+        estimatedDelivery: true,
+        shippingMethod: true,
+        items: {
+          select: {
+            id: true,
+            productName: true,
+            quantity: true,
+            unitPrice: true,
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      return {
+        success: false,
+        error: 'Order not found. Please check your tracking number.',
+      };
+    }
+
+    // Convert Decimal to number for client components
+    const serializedOrder = {
+      ...order,
+      totalAmount: Number(order.totalAmount),
+      items: order.items.map((item) => ({
+        ...item,
+        unitPrice: Number(item.unitPrice),
+      })),
+    };
+
+    return {
+      success: true,
+      order: serializedOrder,
+    };
+  } catch (error) {
+    console.error('Error tracking order:', error);
+    return {
+      success: false,
+      error: 'Failed to track order. Please try again.',
+    };
+  }
+}
+
+export async function getPendingOrdersCount() {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { success: false, count: 0 };
+    }
+
+    const count = await prisma.order.count({
+      where: {
+        userId: session.user.id,
+        status: 'PENDING',
+      },
+    });
+
+    return { success: true, count };
+  } catch (error) {
+    console.error('Error fetching pending orders count:', error);
+    return { success: false, count: 0 };
   }
 }
 

@@ -28,7 +28,7 @@ export interface BrandWithProducts {
     name: string;
     slug: string;
     description: string | null;
-    retailPrice: number;
+    poPrice: number;
     compareAtPrice: number | null;
     isOnSale: boolean;
     isFeatured: boolean;
@@ -64,7 +64,7 @@ export interface BrandProductsResult {
     name: string;
     slug: string;
     description: string | null;
-    retailPrice: number;
+    poPrice: number;
     compareAtPrice: number | null;
     isOnSale: boolean;
     isFeatured: boolean;
