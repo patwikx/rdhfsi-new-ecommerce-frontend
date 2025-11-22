@@ -13,9 +13,9 @@ interface InvoiceDocumentProps {
     customerPhone: string;
     companyName: string | null;
     taxId: string | null;
-    paymentMethod: string;
+    paymentMethod: string | null;
     paymentStatus: string;
-    shippingMethod: string;
+    shippingMethod: string | null;
     trackingNumber: string | null;
     subtotal: number;
     taxAmount: number;
@@ -238,7 +238,7 @@ export function InvoiceDocument({ order }: InvoiceDocumentProps) {
           <div className="order-details">
             <div>
               <div style={{ color: '#666' }}>Payment Method:</div>
-              <div><strong>{order.paymentMethod}</strong></div>
+              <div><strong>{order.paymentMethod || 'N/A'}</strong></div>
             </div>
             <div>
               <div style={{ color: '#666' }}>Payment Status:</div>
@@ -246,7 +246,7 @@ export function InvoiceDocument({ order }: InvoiceDocumentProps) {
             </div>
             <div>
               <div style={{ color: '#666' }}>Shipping Method:</div>
-              <div><strong>{order.shippingMethod}</strong></div>
+              <div><strong>{order.shippingMethod || 'N/A'}</strong></div>
             </div>
           </div>
 
