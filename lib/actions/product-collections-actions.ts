@@ -3,6 +3,24 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
+// Helper function to add site filtering (007 only for regular pages, exclude isOnSale)
+const addSiteFilter = (where: Prisma.ProductWhereInput): Prisma.ProductWhereInput => {
+  return {
+    ...where,
+    isOnSale: false, // Exclude sale items from regular pages
+    inventories: {
+      some: {
+        site: {
+          code: '007', // SANTIAGO BRANCH only
+        },
+        availableQty: {
+          gt: 0, // Only show products with available stock
+        },
+      },
+    },
+  };
+};
+
 interface ProductCollectionResult {
   products: {
     id: string;
@@ -51,11 +69,11 @@ export async function getTrendingProducts(options?: {
     const limit = options?.limit || 20;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ProductWhereInput = {
+    const where = addSiteFilter({
       isActive: true,
       isPublished: true,
       isTrending: true,
-    };
+    });
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
 
@@ -150,6 +168,7 @@ export async function getTrendingProducts(options?: {
 
 /**
  * Get sale products
+ * Shows products from site 007 with isOnSale=true AND all products from site 026 (SANTIAGO - MARKDOWN SITE)
  */
 export async function getSaleProducts(options?: {
   page?: number;
@@ -161,10 +180,39 @@ export async function getSaleProducts(options?: {
     const limit = options?.limit || 20;
     const skip = (page - 1) * limit;
 
+    // Show products from site 007 with isOnSale=true OR all products from site 026
     const where: Prisma.ProductWhereInput = {
       isActive: true,
       isPublished: true,
-      isOnSale: true,
+      OR: [
+        {
+          // Products from site 007 that are marked as on sale
+          isOnSale: true,
+          inventories: {
+            some: {
+              site: {
+                code: '007',
+              },
+              availableQty: {
+                gt: 0,
+              },
+            },
+          },
+        },
+        {
+          // All products from site 026 (markdown site)
+          inventories: {
+            some: {
+              site: {
+                code: '026',
+              },
+              availableQty: {
+                gt: 0,
+              },
+            },
+          },
+        },
+      ],
     };
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
@@ -226,6 +274,28 @@ export async function getSaleProducts(options?: {
             },
             take: 1,
           },
+          inventories: {
+            where: {
+              site: {
+                code: {
+                  in: ['007', '026'], // Show inventory from both sites for sale page
+                },
+              },
+              availableQty: {
+                gt: 0,
+              },
+            },
+            select: {
+              id: true,
+              availableQty: true,
+              site: {
+                select: {
+                  name: true,
+                  code: true,
+                },
+              },
+            },
+          },
         },
       }),
       prisma.product.count({ where }),
@@ -238,6 +308,10 @@ export async function getSaleProducts(options?: {
       poPrice: Number(product.poPrice),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
+      inventories: product.inventories?.map((inv) => ({
+        ...inv,
+        availableQty: Number(inv.availableQty),
+      })) || [],
     }));
 
     return {
@@ -268,11 +342,11 @@ export async function getClearanceProducts(options?: {
     const limit = options?.limit || 20;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ProductWhereInput = {
+    const where = addSiteFilter({
       isActive: true,
       isPublished: true,
       isClearance: true,
-    };
+    });
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
 
@@ -375,11 +449,11 @@ export async function getFeaturedProducts(options?: {
     const limit = options?.limit || 20;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ProductWhereInput = {
+    const where = addSiteFilter({
       isActive: true,
       isPublished: true,
       isFeatured: true,
-    };
+    });
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
 
@@ -490,13 +564,13 @@ export async function getNewArrivals(options?: {
     const dateThreshold = new Date();
     dateThreshold.setDate(dateThreshold.getDate() - days);
 
-    const where: Prisma.ProductWhereInput = {
+    const where = addSiteFilter({
       isActive: true,
       isPublished: true,
       createdAt: {
         gte: dateThreshold,
       },
-    };
+    });
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
 

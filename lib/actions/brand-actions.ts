@@ -161,11 +161,22 @@ export async function getBrandProducts(
       return { success: false, error: 'Brand not found' };
     }
 
-    // Build where clause
+    // Build where clause with site filter (007 only, exclude sale items)
     const where: Prisma.ProductWhereInput = {
       brandId: brand.id,
       isActive: true,
       isPublished: true,
+      isOnSale: false, // Exclude sale items
+      inventories: {
+        some: {
+          site: {
+            code: '007', // SANTIAGO BRANCH only
+          },
+          availableQty: {
+            gt: 0,
+          },
+        },
+      },
     };
 
     if (options?.categoryId) {

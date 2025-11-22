@@ -51,7 +51,12 @@ export interface SearchResult {
       isPrimary: boolean;
     }[];
     inventories: {
+      id: string;
       availableQty: number;
+      site: {
+        name: string;
+        code: string;
+      };
     }[];
   }[];
   totalCount: number;

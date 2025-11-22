@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Heart, Package } from 'lucide-react';
+import { ShoppingCart, Heart, Package, AlertCircle } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useCartStore } from '@/lib/store/cart-store';
 import { useWishlistStore } from '@/lib/store/wishlist-store';
 import { useQuotationStore } from '@/lib/stores/quotation-store';
@@ -29,6 +35,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
   const totalStock = product.inventories.reduce((sum, inv) => sum + inv.availableQty, 0);
+  
+  // Check if product is from markdown site (026) - ONLY site 026, not isOnSale
+  const isMarkdownItem = product.inventories.some(inv => 
+    inv.site.code === '026'
+  );
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -118,7 +129,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   };
 
-  return (
+  const cardContent = (
     <a 
       href={`/product/${product.slug}`}
       className="group cursor-pointer bg-card border border-border hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-sm block"
@@ -138,12 +149,17 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         
-        {/* Sale Badge */}
-        {product.compareAtPrice && Number(product.compareAtPrice) > product.poPrice && (
+        {/* Markdown/Sale Badge */}
+        {isMarkdownItem ? (
+          <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-md shadow-lg flex items-center gap-1.5">
+            <AlertCircle className="w-3.5 h-3.5" />
+            MARKDOWN
+          </div>
+        ) : product.compareAtPrice && Number(product.compareAtPrice) > product.poPrice ? (
           <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">
             SALE
           </div>
-        )}
+        ) : null}
         
         <button
           onClick={handleWishlist}
@@ -243,5 +259,24 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
     </a>
   );
+
+  // Wrap with tooltip if it's a markdown item
+  if (isMarkdownItem) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {cardContent}
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs">
+            <p className="font-semibold mb-1">Markdown Item</p>
+            <p className="text-xs">This item may have slight cosmetic defects, minor packaging damage, or be a discontinued model. Functionality is not affected. All sales are final.</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return cardContent;
 }
 

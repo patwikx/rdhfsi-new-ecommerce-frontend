@@ -95,42 +95,53 @@ export default function SearchBar() {
             <p className="text-xs text-muted-foreground px-2 py-1">
               Found {results.length} result{results.length !== 1 ? 's' : ''}
             </p>
-            {results.map((product) => (
-              <a
-                key={product.id}
-                href={`/product/${product.slug}`}
-                className="flex items-center gap-3 p-2 hover:bg-muted rounded-sm transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                <div className="w-12 h-12 bg-muted rounded-sm overflow-hidden flex-shrink-0">
-                  {product.images[0] ? (
-                    <img 
-                      src={product.images[0].url} 
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
-                      No img
+            {results.map((product) => {
+              const isMarkdownItem = product.inventories.some(inv => inv.site?.code === '026');
+              
+              return (
+                <a
+                  key={product.id}
+                  href={`/product/${product.slug}`}
+                  className="flex items-center gap-3 p-2 hover:bg-muted rounded-sm transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="w-12 h-12 bg-muted rounded-sm overflow-hidden flex-shrink-0 relative">
+                    {product.images[0] ? (
+                      <img 
+                        src={product.images[0].url} 
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
+                        No img
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium truncate">{product.name}</p>
+                      {isMarkdownItem && (
+                        <span className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex-shrink-0">
+                          MARKDOWN
+                        </span>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{product.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    SKU: {product.sku} • {product.category.name}
-                  </p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-sm font-bold">₱{formatPrice(product.poPrice)}</p>
-                  {product.inventories.length > 0 && (
-                    <p className="text-xs text-green-600 dark:text-green-400">
-                      {product.inventories.reduce((sum, inv) => sum + inv.availableQty, 0)} in stock
+                    <p className="text-xs text-muted-foreground">
+                      SKU: {product.sku} • {product.category.name}
                     </p>
-                  )}
-                </div>
-              </a>
-            ))}
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-sm font-bold">₱{formatPrice(product.poPrice)}</p>
+                    {product.inventories.length > 0 && (
+                      <p className="text-xs text-green-600 dark:text-green-400">
+                        {product.inventories.reduce((sum, inv) => sum + inv.availableQty, 0)} in stock
+                      </p>
+                    )}
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
       )}

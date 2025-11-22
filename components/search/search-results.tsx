@@ -37,7 +37,12 @@ interface SearchResultsProps {
         isPrimary: boolean;
       }[];
       inventories: {
+        id: string;
         availableQty: number;
+        site: {
+          name: string;
+          code: string;
+        };
       }[];
     }[];
     totalCount: number;
@@ -126,10 +131,10 @@ export function SearchResults({ results, query }: SearchResultsProps) {
               bulkPrice: null,
               moq: 1,
               leadTime: null,
-              inventories: product.inventories.map((inv, idx) => ({
-                id: `inv-${product.id}-${idx}`,
+              inventories: product.inventories.map((inv) => ({
+                id: inv.id,
                 availableQty: inv.availableQty,
-                site: { name: 'Main' },
+                site: inv.site,
               })),
             } as import('@/app/actions/products').ProductWithDetails} 
           />

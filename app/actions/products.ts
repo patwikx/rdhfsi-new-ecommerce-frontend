@@ -108,6 +108,7 @@ export interface ProductWithDetails {
     availableQty: number;
     site: {
       name: string;
+      code?: string;
     };
   }>;
 }
@@ -139,8 +140,19 @@ export async function getProducts(params?: {
     where: {
       isActive: true,
       isPublished: true,
+      isOnSale: false, // Exclude sale items
       ...(featured && { isFeatured: true }),
       ...(trending && { isTrending: true }),
+      inventories: {
+        some: {
+          site: {
+            code: '007', // SANTIAGO BRANCH only
+          },
+          availableQty: {
+            gt: 0,
+          },
+        },
+      },
     },
     skip: offset,
     take: limit,
@@ -185,6 +197,7 @@ export async function getProducts(params?: {
           site: {
             select: {
               name: true,
+              code: true,
             },
           },
         },
@@ -292,8 +305,19 @@ export async function getProductsByCategory(
     where: {
       isActive: true,
       isPublished: true,
+      isOnSale: false, // Exclude sale items
       category: {
         slug: categorySlug,
+      },
+      inventories: {
+        some: {
+          site: {
+            code: '007', // SANTIAGO BRANCH only
+          },
+          availableQty: {
+            gt: 0,
+          },
+        },
       },
     },
     skip: offset,
@@ -339,6 +363,7 @@ export async function getProductsByCategory(
           site: {
             select: {
               name: true,
+              code: true,
             },
           },
         },
@@ -445,6 +470,7 @@ export async function getProductBySlug(slug: string): Promise<ProductWithDetails
           site: {
             select: {
               name: true,
+              code: true,
             },
           },
         },
@@ -577,6 +603,7 @@ export async function searchProducts(query: string): Promise<ProductWithDetails[
           site: {
             select: {
               name: true,
+              code: true,
             },
           },
         },

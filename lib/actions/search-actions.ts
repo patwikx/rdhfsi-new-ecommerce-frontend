@@ -14,10 +14,53 @@ export async function searchProducts(
   try {
     const { query, categoryId, brandId, minPrice, maxPrice, sortBy, page, limit } = filters;
 
-    // Build where clause
+    // Build where clause with site filter (include both 007 and sale items from 026)
     const where: Prisma.ProductWhereInput = {
       isActive: true,
       isPublished: true,
+      OR: [
+        {
+          // Regular products from site 007
+          isOnSale: false,
+          inventories: {
+            some: {
+              site: {
+                code: '007',
+              },
+              availableQty: {
+                gt: 0,
+              },
+            },
+          },
+        },
+        {
+          // Sale products from site 007
+          isOnSale: true,
+          inventories: {
+            some: {
+              site: {
+                code: '007',
+              },
+              availableQty: {
+                gt: 0,
+              },
+            },
+          },
+        },
+        {
+          // All products from site 026 (markdown)
+          inventories: {
+            some: {
+              site: {
+                code: '026',
+              },
+              availableQty: {
+                gt: 0,
+              },
+            },
+          },
+        },
+      ],
     };
 
     // Search query - search in name, description, SKU
@@ -126,8 +169,25 @@ export async function searchProducts(
             take: 1,
           },
           inventories: {
+            where: {
+              site: {
+                code: {
+                  in: ['007', '026'],
+                },
+              },
+              availableQty: {
+                gt: 0,
+              },
+            },
             select: {
+              id: true,
               availableQty: true,
+              site: {
+                select: {
+                  name: true,
+                  code: true,
+                },
+              },
             },
           },
         },
@@ -144,6 +204,7 @@ export async function searchProducts(
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       averageRating: product.averageRating ? Number(product.averageRating) : null,
       inventories: product.inventories.map((inv) => ({
+        ...inv,
         availableQty: Number(inv.availableQty),
       })),
     }));

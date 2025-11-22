@@ -36,6 +36,14 @@ interface ProductCollectionPageProps {
       altText: string | null;
       isPrimary: boolean;
     }[];
+    inventories?: {
+      id: string;
+      availableQty: number;
+      site: {
+        name: string;
+        code?: string;
+      };
+    }[];
   }[];
   totalCount: number;
   totalPages: number;
@@ -121,7 +129,7 @@ export function ProductCollectionPage({
               bulkPrice: null,
               moq: 1,
               leadTime: null,
-              inventories: [],
+              inventories: product.inventories || [],
             } as import('@/app/actions/products').ProductWithDetails}
           />
         ))}
