@@ -1,8 +1,28 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Menu, X, Building2, ChevronRight } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  ChevronRight, 
+  Home,
+  Store,
+  Sparkles,
+  Tag,
+  TrendingUp,
+  Package,
+  FileText,
+  HelpCircle,
+  Truck,
+  RotateCcw,
+  Info,
+  Mail,
+  Phone,
+  MapPin,
+  Clock
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 interface MobileNavProps {
   categories: Array<{
@@ -57,12 +77,18 @@ export default function MobileNav({ categories }: MobileNavProps) {
             <div className="p-6">
               {/* Logo */}
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-9 h-9 bg-primary flex items-center justify-center rounded-sm">
-                  <Building2 className="w-5 h-5 text-primary-foreground" />
+                <div className="w-9 h-9 flex items-center justify-center rounded-sm overflow-hidden flex-shrink-0">
+                  <Image 
+                    src="/rdh-logo.png" 
+                    alt="RD Hardware Logo" 
+                    width={36} 
+                    height={36}
+                    className="object-contain"
+                  />
                 </div>
                 <div className="leading-none">
-                  <h2 className="text-lg font-bold">ProSupply</h2>
-                  <p className="text-[10px] text-muted-foreground font-medium">Enterprise</p>
+                  <h2 className="text-lg font-bold">RD Hardware</h2>
+                  <p className="text-[10px] text-muted-foreground font-medium">& Fishing Supply, Inc.</p>
                 </div>
               </div>
 
@@ -70,26 +96,20 @@ export default function MobileNav({ categories }: MobileNavProps) {
               <nav className="space-y-1">
                 <a
                   href="/"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
+                  <Home className="w-4 h-4 text-muted-foreground" />
                   <span className="font-medium">Home</span>
                 </a>
 
                 <a
                   href="/brand"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
+                  <Store className="w-4 h-4 text-blue-500" />
                   <span className="font-medium">Brands</span>
-                </a>
-
-                <a
-                  href="/categories"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <span className="font-medium">All Categories</span>
                 </a>
 
                 <div className="pt-4 pb-2">
@@ -100,38 +120,27 @@ export default function MobileNav({ categories }: MobileNavProps) {
 
                 <a
                   href="/new"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
+                  <Sparkles className="w-4 h-4 text-yellow-500" />
                   <span>New Arrivals</span>
                 </a>
                 <a
                   href="/sale"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
+                  <Tag className="w-4 h-4 text-red-500" />
                   <span>Sale</span>
                 </a>
                 <a
                   href="/trending"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
+                  <TrendingUp className="w-4 h-4 text-green-500" />
                   <span>Trending</span>
-                </a>
-                <a
-                  href="/featured"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <span>Featured</span>
-                </a>
-                <a
-                  href="/clearance"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <span>Clearance</span>
                 </a>
 
                 <div className="pt-4 pb-2">
@@ -157,40 +166,94 @@ export default function MobileNav({ categories }: MobileNavProps) {
 
                 <div className="pt-4 pb-2">
                   <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Support
+                    Customer Service
                   </p>
                 </div>
 
                 <a
-                  href="/orders"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  href="/track-order"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
+                  <Package className="w-4 h-4 text-muted-foreground" />
                   <span>Track Order</span>
                 </a>
                 <a
-                  href="/bulk-order"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  href="/for-quotation"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
-                  <span>Bulk Order</span>
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <span>Request Quotation</span>
                 </a>
                 <a
-                  href="#"
-                  className="flex items-center justify-between px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  href="/faq"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
-                  <span>Help Center</span>
+                  <HelpCircle className="w-4 h-4 text-muted-foreground" />
+                  <span>FAQ</span>
+                </a>
+                <a
+                  href="/shipping"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Truck className="w-4 h-4 text-muted-foreground" />
+                  <span>Shipping Policy</span>
+                </a>
+                <a
+                  href="/returns"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <RotateCcw className="w-4 h-4 text-muted-foreground" />
+                  <span>Return Policy</span>
+                </a>
+
+                <div className="pt-4 pb-2">
+                  <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Company
+                  </p>
+                </div>
+
+                <a
+                  href="/about"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <span>About Us</span>
+                </a>
+                <a
+                  href="/contact"
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm hover:bg-muted transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  <span>Contact</span>
                 </a>
               </nav>
 
               {/* Contact Info */}
-              <div className="mt-6 pt-6 border-t border-border">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              <div className="mt-6 pt-6 border-t border-border space-y-3">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Contact Us
                 </p>
-                <p className="text-sm font-medium mb-1">1-800-SUPPLY-PRO</p>
-                <p className="text-xs text-muted-foreground">Mon-Fri 7AM-8PM EST</p>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <a href="tel:+639399124032" className="text-sm font-medium hover:text-primary transition-colors">
+                    0939 912 4032
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <p className="text-xs text-muted-foreground">Mon-Sun 8AM-5PM</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-muted-foreground">Santiago Boulevard, General Santos City</p>
+                </div>
               </div>
             </div>
           </div>
