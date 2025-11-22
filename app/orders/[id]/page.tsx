@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { getOrderById } from '@/app/actions/orders';
 import { Package, CreditCard, Truck, MapPin, Building2, FileText, ArrowLeft, Mail, Phone } from 'lucide-react';
 import Link from 'next/link';
+import { InvoiceDocument } from '@/components/orders/invoice-document';
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -74,9 +75,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                 Placed on {formatDate(order.createdAt)}
               </p>
             </div>
-            <span className={`text-sm font-medium px-4 py-2 rounded-full ${getStatusColor(order.status)} w-fit`}>
-              {order.status}
-            </span>
+            <div className="flex items-center gap-3">
+              {order.paymentStatus === 'PAID' && (
+                <InvoiceDocument order={order} />
+              )}
+              <span className={`text-sm font-medium px-4 py-2 rounded-full ${getStatusColor(order.status)} w-fit`}>
+                {order.status}
+              </span>
+            </div>
           </div>
         </div>
 
