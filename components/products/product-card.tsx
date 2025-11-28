@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Heart, Package, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 import {
   Tooltip,
   TooltipContent,
@@ -25,7 +26,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const formatPrice = (price: number) => {
     return price.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
-  const [isHovered, setIsHovered] = useState(false);
+  const [, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
@@ -33,7 +34,20 @@ export default function ProductCard({ product }: ProductCardProps) {
   const addToQuotation = useQuotationStore((state) => state.addItem);
   const isWishlisted = isInWishlist(product.id);
 
+  // Helper to rewrite image URLs for local development
+  const getImageUrl = (url: string | undefined) => {
+    if (!url) return undefined;
+    
+    // If in development and URL points to production, rewrite to local API
+    if (process.env.NODE_ENV === 'development' && url.includes('store.rdretailgroup.com.ph')) {
+      return url.replace('https://store.rdretailgroup.com.ph', 'http://localhost:3001');
+    }
+    
+    return url;
+  };
+  
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
+  const imageUrl = getImageUrl(primaryImage?.url);
   const totalStock = product.inventories.reduce((sum, inv) => sum + inv.availableQty, 0);
   
   // Check if product is from markdown site (026) - ONLY site 026, not isOnSale
@@ -138,10 +152,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <div className="relative aspect-square overflow-hidden bg-muted">
         {primaryImage?.url ? (
-          <img 
+          <Image 
             src={primaryImage.url} 
             alt={primaryImage.altText || product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-muted">
