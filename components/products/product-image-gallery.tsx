@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Package } from 'lucide-react';
+import { MinioImage } from '@/components/shared/minio-image';
 
 interface ProductImage {
   id: string;
@@ -39,11 +40,13 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
   return (
     <div>
       {/* Main Image */}
-      <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-4 border border-border">
-        <img
+      <div className="relative aspect-square bg-muted rounded-lg overflow-hidden mb-4 border border-border">
+        <MinioImage
           src={selectedImage?.url}
           alt={selectedImage?.altText || productName}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          priority
         />
       </div>
       
@@ -53,16 +56,17 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
           <button
             key={image.id}
             onClick={() => setSelectedImage(image)}
-            className={`aspect-square bg-muted rounded-sm overflow-hidden cursor-pointer transition-all border-2 ${
+            className={`relative aspect-square bg-muted rounded-sm overflow-hidden cursor-pointer transition-all border-2 ${
               selectedImage?.id === image.id
                 ? 'border-primary'
                 : 'border-border hover:border-primary/50'
             }`}
           >
-            <img
+            <MinioImage
               src={image.url}
               alt={image.altText || productName}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </button>
         ))}
