@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Heart, Package, AlertCircle } from 'lucide-react';
-import Image from 'next/image';
+import { MinioImage } from '@/components/shared/minio-image';
 import {
   Tooltip,
   TooltipContent,
@@ -152,7 +152,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <div className="relative aspect-square overflow-hidden bg-muted">
         {primaryImage?.url ? (
-          <Image 
+          <MinioImage 
             src={primaryImage.url} 
             alt={primaryImage.altText || product.name}
             fill
