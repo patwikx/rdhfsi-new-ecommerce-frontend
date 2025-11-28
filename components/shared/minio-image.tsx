@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 interface MinioImageProps {
   src: string;
@@ -15,8 +15,28 @@ interface MinioImageProps {
 export function MinioImage({ src, alt, fill, className, sizes, priority }: MinioImageProps) {
   const [error, setError] = useState(false);
 
-  // For presigned URLs, we need to use unoptimized mode
-  const isPresignedUrl = src.includes('X-Amz-Algorithm') || src.includes('X-Amz-Credential');
+  // Extract filename from presigned URL and use our API route for fresh URLs
+  const imageSrc = useMemo(() => {
+    try {
+      // Check if it's a presigned URL
+      if (src.includes('X-Amz-Algorithm') || src.includes('X-Amz-Credential')) {
+        // Extract the filename from the URL path
+        const url = new URL(src);
+        const pathParts = url.pathname.split('/');
+        // Remove the bucket name (first part after /) and get the filename
+        const fileName = pathParts.slice(2).join('/'); // Skip empty string and bucket name
+        
+        // Use our API route to get a fresh presigned URL
+        return `/api/minio-image?file=${encodeURIComponent(fileName)}`;
+      }
+      
+      // If it's not a presigned URL, use it as-is
+      return src;
+    } catch (e) {
+      console.error('Error parsing image URL:', e);
+      return src;
+    }
+  }, [src]);
 
   if (error) {
     return (
@@ -30,13 +50,13 @@ export function MinioImage({ src, alt, fill, className, sizes, priority }: Minio
 
   return (
     <Image
-      src={src}
+      src={imageSrc}
       alt={alt}
       fill={fill}
       className={className}
       sizes={sizes}
       priority={priority}
-      unoptimized={isPresignedUrl}
+      unoptimized={true}
       onError={() => setError(true)}
     />
   );
