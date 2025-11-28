@@ -2,6 +2,7 @@
 
 import { ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { MinioImage } from '@/components/shared/minio-image';
 import {
   Sheet,
   SheetContent,
@@ -67,12 +68,14 @@ export default function CartSheet() {
                   <div key={item.id} className="bg-muted/50 rounded-lg p-4">
                     <div className="flex gap-4">
                       {/* Product Image */}
-                      <div className="w-20 h-20 bg-muted rounded-md overflow-hidden flex-shrink-0 border border-border">
+                      <div className="relative w-20 h-20 bg-muted rounded-md overflow-hidden flex-shrink-0 border border-border">
                         {item.image && (
-                          <img
+                          <MinioImage
                             src={item.image}
                             alt={item.name}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="80px"
                           />
                         )}
                       </div>

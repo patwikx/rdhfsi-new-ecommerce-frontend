@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Package, Star } from 'lucide-react';
 import { getRelatedProducts } from '@/lib/actions/related-products-actions';
+import { MinioImage } from '@/components/shared/minio-image';
 
 interface RelatedProductsProps {
   productId: string;
@@ -28,12 +29,14 @@ export async function RelatedProducts({ productId }: RelatedProductsProps) {
               href={`/product/${product.slug}`}
               className="group border border-border rounded-lg p-4 hover:border-primary hover:shadow-md transition-all bg-card"
             >
-              <div className="aspect-square relative mb-3 bg-muted rounded overflow-hidden">
+              <div className="relative aspect-square mb-3 bg-muted rounded overflow-hidden">
                 {primaryImage ? (
-                  <img
+                  <MinioImage
                     src={primaryImage.url}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform"
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

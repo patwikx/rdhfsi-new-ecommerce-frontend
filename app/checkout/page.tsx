@@ -12,6 +12,7 @@ import { FileUpload, UploadedFileDisplay } from '@/components/shared/file-upload
 import { toast } from 'sonner';
 import { Session } from 'next-auth';
 import { OrderConfirmationDialog } from '@/components/orders/order-confirmation-dialog';
+import { MinioImage } from '@/components/shared/minio-image';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -951,12 +952,14 @@ export default function CheckoutPage() {
                   {items.map((item) => (
                     <div key={item.id} className="pb-3 border-b border-border">
                       <div className="flex gap-3">
-                        <div className="w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
+                        <div className="relative w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
                           {item.image && (
-                            <img
+                            <MinioImage
                               src={item.image}
                               alt={item.name}
-                              className="w-full h-full object-cover"
+                              fill
+                              className="object-cover"
+                              sizes="64px"
                             />
                           )}
                         </div>
