@@ -5,6 +5,7 @@ import { auth } from '@/auth';
 import { redeemCoupon } from './coupon';
 import { getDefaultTaxRate } from './tax';
 import { createNotification } from './notifications';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 interface OrderItem {
   productId: string;
@@ -204,6 +205,42 @@ export async function createOrder(data: CreateOrderData) {
         )
       )
     );
+
+    // Send order confirmation email to customer
+    const paymentMethodLabel = 
+      data.paymentMethod === 'po' ? 'Purchase Order (PO)' :
+      data.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment';
+
+    await sendOrderConfirmationEmail({
+      orderNumber,
+      orderId: order.id,
+      customerName: data.fullName,
+      customerEmail: data.email,
+      customerPhone: data.phone,
+      companyName: data.companyName,
+      items: data.items.map(item => ({
+        name: item.name,
+        sku: item.sku,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      subtotal: data.subtotal,
+      shippingAmount: data.shippingAmount,
+      taxAmount: data.taxAmount,
+      discountAmount: data.discountAmount,
+      totalAmount: data.totalAmount,
+      deliveryType: data.deliveryType,
+      shippingAddress: data.deliveryType === 'delivery' && data.address ? {
+        address: data.address,
+        city: data.city || '',
+        province: data.province || '',
+        postalCode: data.postalCode,
+      } : undefined,
+      paymentMethod: paymentMethodLabel,
+      poNumber: data.poNumber,
+      poFileUrl: data.poFileUrl,
+      trackingNumber,
+    });
 
     return {
       success: true,

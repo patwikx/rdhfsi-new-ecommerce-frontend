@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
 
       if (result.success) {
         toast.success('OTP Sent!', {
-          description: `Check your email for the verification code. ${result.otp ? `(Dev: ${result.otp})` : ''}`,
+          description: 'Check your email for the verification code.',
         });
         setOtpExpiry(new Date(Date.now() + 5 * 60 * 1000));
         setStep('otp');
@@ -125,7 +125,7 @@ export default function ForgotPasswordPage() {
       const result = await requestPasswordReset(email);
       if (result.success) {
         toast.success('OTP Resent!', {
-          description: `New code sent to your email. ${result.otp ? `(Dev: ${result.otp})` : ''}`,
+          description: 'New code sent to your email.',
         });
         setOtpExpiry(new Date(Date.now() + 5 * 60 * 1000));
         setOtp('');

@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import { sendPasswordResetEmail } from '@/lib/email';
 
 const requestResetSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -71,15 +72,21 @@ export async function requestPasswordReset(email: string) {
       },
     });
 
-    // TODO: Send email with OTP
-    // For now, we'll just return success
-    // In production, integrate with email service (SendGrid, Resend, etc.)
-    console.log(`OTP for ${email}: ${otp}`);
+    // Send email with OTP using Resend
+    const emailResult = await sendPasswordResetEmail({
+      email,
+      name: user.name || '',
+      otp,
+    });
+
+    if (!emailResult.success) {
+      console.error('Failed to send password reset email:', emailResult.error);
+      // Still return success to not reveal if email sending failed
+    }
 
     return {
       success: true,
       message: 'OTP sent to your email',
-      otp, // Remove this in production!
     };
   } catch (error) {
     console.error('Password reset request error:', error);
